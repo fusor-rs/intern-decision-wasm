@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Intern-Decision · structured decisions in your browser</title>
+  <meta name="description" content="InternLM's Intern-Decision-2B running on this device's CPU, compiled to WebAssembly with fusor-ai: a state, questions and images in, a calibrated answer for every question out. Nothing leaves the page.">
+  <link rel="icon" href="/brand/intern-decision.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/base.css">
+  <link rel="stylesheet" href="/app.css">
+</head>
+<body>
+  <App state="{{ App::new() }}">
+    <script type="module" src="./app.js"></script>
+    <main on:engine="state.receive(event)" data-phase="{{ state.phase.get().name() }}" data-loaded="{{ state.loaded.get().is_some() }}">
+      <header class="masthead">
+        <div class="lockup">
+          <img src="/brand/fusor-ai.svg" alt="fusor-ai" width="40" height="40">
+          <span class="times" aria-hidden="true">×</span>
+          <img src="/brand/intern-decision.svg" alt="" width="36" height="36">
+          <span class="wordmark">Intern-Decision</span>
+        </div>
+        <h1>Structured decisions, made on your own CPU</h1>
+        <p class="lede">InternLM's Intern-Decision-2B, a multimodal decision model, compiled to WebAssembly with fusor-ai. Describe a state, ask it questions with their options, add images if you have them, and it answers every question at once with calibrated probabilities. Once loaded, nothing leaves the page.</p>
+      </header>
+
+      <If condition="{{ state.loading() }}">
+        <section class="card loading" aria-live="polite">
+          <div class="row"><strong>Loading the model</strong><span id="detail" class="muted">{{ state.detail.get() }}</span></div>
+          <progress max="1" value="{{ state.fraction.get() }}"></progress>
+        </section>
+      </If>
+
+      <If condition="{{ state.phase.get() == Phase::Broken }}">
+        <section class="card broken" role="alert">
+          <strong>{{ if state.failed_to_load() { "The model could not load" } else { "The engine stopped" } }}</strong>
+          <p id="detail">{{ state.detail.get() }}</p>
+          <If condition="{{ state.failed_to_load() }}">
+            <p class="muted">A bundle loads only into the runtime built with it. If you built this page yourself, rebuild both with <code>just ui</code>.</p>
+          </If>
+          <div class="row"><a id="reload" class="control primary" href="">Reload</a></div>
+        </section>
+      </If>
+
+      <section class="card request" data-phase="{{ state.phase.get().name() }}">
+        <fieldset class="examples" disabled="{{ !state.idle() }}">
+          <legend>Start from</legend>
+          <div class="choices">
+            <ForEach items="{{ state.examples() }}" key="{{ |example| example.id }}">
+              <button type="button" class="chip" data-example="{{ item.get().id }}" on:click="state.pick(&item.get())">{{ item.get().label }}</button>
+            </ForEach>
+          </div>
+        </fieldset>
+        <label for="state">State <span class="muted">· words, or JSON</span></label>
+        <textarea id="state" class="field" rows="6" spellcheck="false" bind="state.state_text"></textarea>
+        <label for="questions">Questions <span class="muted">· a JSON object: each a <code>choice</code>, a <code>score</code> or a yes-or-no <code>noul</code>, with its <code>instructions</code> and <code>criteria</code></span></label>
+        <textarea id="questions" class="field mono" rows="12" spellcheck="false" bind="state.questions_text"></textarea>
+        <div class="images">
+          <label id="pick" class="drop" data-disabled="{{ !state.idle() }}">
+            <span class="hint">Drop, paste or <u>choose</u> images (optional)</span>
+            <input id="file" type="file" accept="image/*" multiple disabled="{{ !state.idle() }}">
+          </label>
+          <div class="thumbs">
+            <ForEach items="{{ state.pictures.get() }}" key="{{ |picture| picture.index }}">
+              <figure class="thumb"><canvas data-picture="{{ item.get().index }}"></canvas><figcaption class="muted">{{ item.get().summary() }}</figcaption></figure>
+            </ForEach>
+          </div>
+          <div class="row">
+            <span id="pictures" class="muted">{{ state.pictures_summary() }}</span>
+            <button id="clear" type="button" class="control" disabled="{{ !state.idle() || state.pictures.get().is_empty() }}" on:click="state.clear()">Remove images</button>
+          </div>
+        </div>
+        <div class="row">
+          <button id="decide" type="button" class="control primary" disabled="{{ !state.idle() }}" on:click="state.decide()"><span class="dot" aria-hidden="true"></span>{{ state.decide_label() }}</button>
+          <button id="stop" type="button" class="control" disabled="{{ state.idle() }}" on:click="state.stop()">Stop</button>
+          <progress id="reading" max="1" value="{{ state.progress.get() }}" hidden="{{ state.idle() }}"></progress>
+        </div>
+        <span id="status" class="muted" aria-live="polite">{{ state.status.get() }}</span>
+      </section>
+
+      <If condition="{{ state.measured.get() }}">
+        <section class="card answers">
+          <div id="answers" class="questions" aria-live="polite">
+            <ForEach items="{{ state.answers() }}" key="{{ |answer| answer.name.clone() }}">
+              <article class="question" data-question="{{ item.get().name }}">
+                <header class="row">
+                  <strong class="name">{{ item.get().name }}</strong>
+                  <span class="kind">{{ item.get().kind }}</span>
+                </header>
+                <p class="decision"><span class="value">{{ item.get().decision }}</span> <span class="muted">{{ item.get().reading }}</span></p>
+                <ol class="options">
+                  <ForEach items="{{ item.get().choices }}" key="{{ |choice| choice.index }}">
+                    <li class="option" data-chosen="{{ item.get().chosen }}">
+                      <span class="label">{{ item.get().label }}</span>
+                      <span class="track"><span class="bar" style="{{ item.get().bar() }}"></span></span>
+                      <span class="percent">{{ item.get().percent() }}</span>
+                    </li>
+                  </ForEach>
+                </ol>
+              </article>
+            </ForEach>
+          </div>
+          <If condition="{{ state.empty() }}">
+            <p class="muted placeholder">The answers appear here once the request is read.</p>
+          </If>
+          <details class="json">
+            <summary>Response JSON</summary>
+            <pre id="response" class="text">{{ state.response.get() }}</pre>
+          </details>
+          <dl class="metrics">
+            <div><dt>Time</dt><dd id="time">{{ state.metrics.get().time() }}</dd><dd class="muted">from Decide to the answers</dd></div>
+            <div><dt>Speed</dt><dd id="speed">{{ state.metrics.get().speed() }}</dd><dd class="muted">prompt tokens read per second</dd></div>
+            <div><dt>Tokens</dt><dd id="tokens">{{ state.metrics.get().tokens() }}</dd><dd class="muted">in the prompt</dd></div>
+            <div><dt>Images</dt><dd id="image-tokens">{{ state.metrics.get().image_tokens() }}</dd><dd class="muted">of those, the images'</dd></div>
+            <div><dt>Network</dt><dd id="requests">{{ state.metrics.get().requests() }}</dd><dd class="muted">requests since the model loaded</dd></div>
+          </dl>
+          <div class="row"><button id="copy" type="button" class="control" disabled="{{ state.empty() }}" on:click="state.copy()">Copy JSON</button></div>
+        </section>
+      </If>
+
+      <footer class="muted">
+        <span id="runtime">{{ state.summary() }}</span>
+        <span>Built with <a href="https://github.com/fusor-rs/fusor-ai">fusor-ai</a> and <a href="https://fusor.build">fusor</a> · model: <a href="https://huggingface.co/internlm/Intern-Decision-2B">Intern-Decision-2B</a> by <a href="https://github.com/InternLM">InternLM</a> (<a href="/model/LICENSE">Apache-2.0</a>, from <a href="/model/LICENSE-QWEN">Qwen3.5</a>) · <a href="https://github.com/fusor-rs/intern-decision-wasm">source</a></span>
+      </footer>
+    </main>
+  </App>
+</body>
+</html>

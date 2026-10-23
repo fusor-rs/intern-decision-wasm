@@ -1,0 +1,123 @@
+{
+  "refund": {
+    "answers": {
+      "team": {
+        "type": "choice",
+        "probabilities": {
+          "billing": 0.9846140113186557,
+          "delivery": 0.015385988681344444
+        },
+        "confidence": 0.9846140113186557,
+        "choice": "billing",
+        "source": "local",
+        "decision": "billing"
+      },
+      "urgency": {
+        "type": "score",
+        "probabilities": {
+          "0": 0.3730331646282711,
+          "1": 0.4046095313633467,
+          "2": 0.2223573040083823
+        },
+        "confidence": 0.4046095313633467,
+        "score": 0.8493241393801113,
+        "legend": {
+          "0": "Low",
+          "1": "Medium",
+          "2": "High"
+        },
+        "source": "local",
+        "decision": "1"
+      },
+      "refund_requested": {
+        "type": "noul",
+        "probabilities": {
+          "no": 0.13218813251602343,
+          "yes": 0.8678118674839765
+        },
+        "confidence": 0.8678118674839765,
+        "noul": 0.8678118674839765,
+        "source": "local",
+        "decision": "yes"
+      }
+    },
+    "usage": {
+      "input_tokens": 355,
+      "output_tokens": 3,
+      "decision_count": 3
+    },
+    "calibration": {
+      "method": "temperature-scaling",
+      "temperature": 2.100509348278
+    },
+    "model": "Intern-Decision-2B",
+    "backend": "hf"
+  },
+  "seal": {
+    "answers": {
+      "has_seal": {
+        "type": "noul",
+        "probabilities": {
+          "no": 0.15648689728269974,
+          "yes": 0.8435131027173004
+        },
+        "confidence": 0.8435131027173004,
+        "noul": 0.8435131027173004,
+        "source": "local",
+        "decision": "yes"
+      },
+      "shape": {
+        "type": "choice",
+        "probabilities": {
+          "round": 0.8460848445420286,
+          "square": 0.07959185033475907,
+          "none": 0.07432330512321231
+        },
+        "confidence": 0.8460848445420286,
+        "choice": "round",
+        "source": "local",
+        "decision": "round"
+      },
+      "color": {
+        "type": "choice",
+        "probabilities": {
+          "red": 0.8923636798352538,
+          "blue": 0.05238475283515935,
+          "black": 0.05525156732958694
+        },
+        "confidence": 0.8923636798352538,
+        "choice": "red",
+        "source": "local",
+        "decision": "red"
+      },
+      "legibility": {
+        "type": "score",
+        "probabilities": {
+          "1": 0.12237107801739773,
+          "2": 0.3424101553920113,
+          "3": 0.535218766590591
+        },
+        "confidence": 0.535218766590591,
+        "score": 2.4128476885731933,
+        "legend": {
+          "1": "Illegible",
+          "2": "Partly legible",
+          "3": "Fully legible"
+        },
+        "source": "local",
+        "decision": "3"
+      }
+    },
+    "usage": {
+      "input_tokens": 755,
+      "output_tokens": 4,
+      "decision_count": 4
+    },
+    "calibration": {
+      "method": "temperature-scaling",
+      "temperature": 2.100509348278
+    },
+    "model": "Intern-Decision-2B",
+    "backend": "hf"
+  }
+}

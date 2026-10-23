@@ -1,0 +1,25 @@
+{
+  "action": {
+    "type": "choice",
+    "instructions": "What should the moderators do with the comment?",
+    "criteria": {
+      "publish": "Publish it as written",
+      "hold": "Hold it for a moderator",
+      "reject": "Reject it"
+    }
+  },
+  "toxicity": {
+    "type": "score",
+    "instructions": "How toxic is the comment?",
+    "criteria": [
+      "Not toxic",
+      "Mildly toxic",
+      "Toxic",
+      "Severely toxic"
+    ]
+  },
+  "insult": {
+    "type": "noul",
+    "instructions": "Does the comment insult a person or a group?"
+  }
+}

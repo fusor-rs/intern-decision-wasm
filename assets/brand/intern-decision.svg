@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <title>Intern-Decision</title>
+  <rect width="64" height="64" rx="16" fill="#272A2C"/>
+  <g fill="none" stroke="#F2F1ED" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 32h14M26 32l12-13h12M26 32l12 13h12"/>
+  </g>
+  <path d="M38 19h12" fill="none" stroke="#2F6BFF" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="26" cy="32" r="4" fill="#2F6BFF"/>
+</svg>

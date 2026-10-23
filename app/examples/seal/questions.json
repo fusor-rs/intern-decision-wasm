@@ -1,0 +1,33 @@
+{
+  "has_seal": {
+    "type": "noul",
+    "instructions": "Does the image show an official seal or stamp?"
+  },
+  "shape": {
+    "type": "choice",
+    "instructions": "What shape is the seal?",
+    "criteria": {
+      "round": "A circular or oval seal",
+      "square": "A square or rectangular seal",
+      "none": "There is no seal"
+    }
+  },
+  "color": {
+    "type": "choice",
+    "instructions": "What is the seal's main color?",
+    "criteria": {
+      "red": "Red or orange ink",
+      "blue": "Blue ink",
+      "black": "Black or gray ink"
+    }
+  },
+  "legibility": {
+    "type": "score",
+    "instructions": "How legible is the seal's text?",
+    "criteria": {
+      "1": "Illegible",
+      "2": "Partly legible",
+      "3": "Fully legible"
+    }
+  }
+}

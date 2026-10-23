@@ -1,0 +1,12 @@
+{
+  "message": "The customer was charged twice and asks for the extra payment back.",
+  "amount": 49.99,
+  "charges": 2,
+  "risk_score": 1e-05,
+  "customer": {
+    "tier": "gold",
+    "verified": true,
+    "previous_orders": []
+  },
+  "notes": null
+}

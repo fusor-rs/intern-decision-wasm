@@ -1,0 +1,72 @@
+{
+  "refund": {
+    "state": {
+      "message": "The customer was charged twice and asks for the extra payment back.",
+      "amount": 49.99,
+      "charges": 2,
+      "risk_score": 1e-05,
+      "customer": {
+        "tier": "gold",
+        "verified": true,
+        "previous_orders": []
+      },
+      "notes": null
+    },
+    "questions": {
+      "team": {
+        "type": "choice",
+        "instructions": "Which team should handle this request?",
+        "criteria": {
+          "billing": "Payments and refunds",
+          "delivery": "Shipping and delivery"
+        }
+      },
+      "urgency": {
+        "type": "score",
+        "instructions": "Rate the priority.",
+        "criteria": ["Low", "Medium", "High"]
+      },
+      "refund_requested": {
+        "type": "noul",
+        "instructions": "Is the customer asking for a refund?"
+      }
+    }
+  },
+  "seal": {
+    "state": "A scanned page from a company's archive.",
+    "questions": {
+      "has_seal": {
+        "type": "noul",
+        "instructions": "Does the image show an official seal or stamp?"
+      },
+      "shape": {
+        "type": "choice",
+        "instructions": "What shape is the seal?",
+        "criteria": {
+          "round": "A circular or oval seal",
+          "square": "A square or rectangular seal",
+          "none": "There is no seal"
+        }
+      },
+      "color": {
+        "type": "choice",
+        "instructions": "What is the seal's main color?",
+        "criteria": {
+          "red": "Red or orange ink",
+          "blue": "Blue ink",
+          "black": "Black or gray ink"
+        }
+      },
+      "legibility": {
+        "type": "score",
+        "instructions": "How legible is the seal's text?",
+        "criteria": {
+          "1": "Illegible",
+          "2": "Partly legible",
+          "3": "Fully legible"
+        }
+      }
+    },
+    "images": ["seal.png"]
+  }
+}
