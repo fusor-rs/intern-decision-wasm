@@ -11,6 +11,8 @@
 
 **Four questions about a scanned seal decided in 3.4 s**, in Chrome on an Apple M4 Pro, eight threads. [Benchmarks](benchmarks.md)
 
+<a href="https://huggingface.co/spaces/fusorlabs/intern-decision-wasm"><img src="assets/demo/demo.gif" alt="intern-decision-wasm in Chrome: four questions about a scanned seal answered with probabilities by Intern-Decision-2B on the CPU in 3.6 s, zero network requests" width="720"></a>
+
 Describe a situation, ask questions about it with their options, add images if you have them, and get every answer at once with calibrated probabilities: InternLM's [Intern-Decision-2B](https://huggingface.co/internlm/Intern-Decision-2B), a 2B multimodal decision model, computed on your own device. No server, no API key, no GPU required, and once the model has loaded, nothing you type or drop leaves the page.
 
 intern-decision-wasm is the app around the model: a [fusor](https://github.com/fusor-rs/fusor) page, the browser runtime and a native CLI. The model itself, compiled to WebAssembly, is built with [fusor-ai](https://github.com/fusor-rs/fusor-ai), the toolkit for AI runtimes in Rust and WebAssembly, from the published weights.
