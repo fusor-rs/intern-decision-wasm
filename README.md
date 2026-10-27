@@ -7,13 +7,17 @@
 
 # Structured decisions in the browser, on the CPU
 
+**[Try it in your browser](https://huggingface.co/spaces/fusorlabs/intern-decision-wasm)**: no install, no server. The model downloads once and runs on your CPU.
+
+**Four questions about a scanned seal decided in 3.4 s**, in Chrome on an Apple M4 Pro, eight threads. [Benchmarks](benchmarks.md)
+
 Describe a situation, ask questions about it with their options, add images if you have them, and get every answer at once with calibrated probabilities: InternLM's [Intern-Decision-2B](https://huggingface.co/internlm/Intern-Decision-2B), a 2B multimodal decision model, computed on your own device. No server, no API key, no GPU required, and once the model has loaded, nothing you type or drop leaves the page.
 
 intern-decision-wasm is the app around the model: a [fusor](https://github.com/fusor-rs/fusor) page, the browser runtime and a native CLI. The model itself, compiled to WebAssembly, is built with [fusor-ai](https://github.com/fusor-rs/fusor-ai), the toolkit for AI runtimes in Rust and WebAssembly, from the published weights.
 
 **In development · v0.1**: this is experimental software. See [status and known limitations](#status-and-known-limitations).
 
-[Run it](#run-it-locally) · [How it works](#how-it-works) · [How fast is it](#how-fast-is-it) · [Benchmarks](benchmarks.md) · [Status](#status-and-known-limitations)
+[Run it](#run-it-locally) · [Try it online](#try-it-online) · [How it works](#how-it-works) · [How fast is it](#how-fast-is-it) · [Benchmarks](benchmarks.md) · [Status](#status-and-known-limitations)
 
 ## Run it locally
 
@@ -27,6 +31,10 @@ just ui
 and open the address it prints. `just ui` installs the pinned tools (the threads toolchain with rustup; wasm-bindgen, binaryen and the fusor CLI into `.tools/`), downloads the checkpoint at a pinned revision (4.4 GB, each file sha256-checked), compiles it into a 2068 MB bundle, builds the four browser runtimes (a few minutes the first time, seconds after) and the page, and serves it on `http://localhost:8787` with the bundle beside it.
 
 Start from an example (a support ticket, a comment to review, a document with a seal) or write your own: the **state** in words or as JSON, and the **questions** as a JSON object, each a `choice` among described options, a `score` on a scale, or a yes-or-no `noul`, as the model card describes them. Add images by dropping, pasting or choosing them, and press **Decide**, even while the model is still loading: the request is decided the moment the model is ready. Each question comes back with its decision and every option's probability as a bar, a score with its expected value, and the response's JSON to copy. Every decision is measured live: the time from Decide to the answers, the prompt's tokens read per second, its tokens and its images', and the network requests since the model loaded, which stay at zero.
+
+## Try it online
+
+Open the Hugging Face Space [fusorlabs/intern-decision-wasm](https://huggingface.co/spaces/fusorlabs/intern-decision-wasm) in Chrome or Edge. The page downloads the 2068 MB model once and keeps it in the browser's storage, so the next visit loads in about a second.
 
 ## More ways to run it
 

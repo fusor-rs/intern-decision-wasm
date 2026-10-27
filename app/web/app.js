@@ -14,7 +14,11 @@ const requestedThreads = Number.parseInt(params.get('threads') ?? '', 10);
 const THREADS = Math.min(cores, requestedThreads > 0 ? requestedThreads : Math.max(1, Math.min(8, cores - 2)));
 // The bundle served next to the page (`just serve` mounts dist/model there); `?model=<url>` loads
 // another one, `?build=web-single` pins a runtime build.
-const MODEL_URL = new URL(params.get('model') ?? 'model/', document.baseURI).href;
+// A Hugging Face Space holds at most 1 GB, so the Space loads the bundle from the model repo
+// fusorlabs/intern-decision-2b-web (`just deploy-model`) instead of from beside the page.
+const HOSTED_MODEL = 'https://huggingface.co/fusorlabs/intern-decision-2b-web/resolve/main/';
+const DEFAULT_MODEL = location.hostname.endsWith('.hf.space') ? HOSTED_MODEL : 'model/';
+const MODEL_URL = new URL(params.get('model') ?? DEFAULT_MODEL, document.baseURI).href;
 // The runtime's limit (`intern_decision::session::MAX_IMAGES`).
 const MAX_IMAGES = 8;
 
